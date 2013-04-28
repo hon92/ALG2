@@ -1,0 +1,48 @@
+void binarytree::insertloop(int cislo)
+{
+
+  uzel * novy=new uzel;
+	novy->cislo=cislo;
+	novy->levy=NULL;	
+	novy->pravy=NULL;			
+	uzel*tmp;
+	tmp=root;
+
+	if(root==NULL)
+	{
+		root=novy;
+	}
+	else
+	{
+		while(1)
+		{
+			if(cislo < tmp->cislo)
+			{
+				if(tmp->levy==NULL)
+					break;
+					tmp=tmp->levy;
+				
+			}
+			else
+			{
+				if(tmp->pravy==NULL)
+					break;
+					tmp=tmp->pravy;
+				
+			}
+		}
+		if(cislo < tmp->cislo)
+		{
+			tmp->levy=novy;
+			return;
+		}
+		else
+		{
+			tmp->pravy=novy;
+			return;
+		}
+	}
+
+	
+	
+}
