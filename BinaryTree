@@ -1,0 +1,175 @@
+#include <iostream>
+#include <vld.h>
+using namespace std;
+
+struct uzel
+{
+  int cislo;
+	uzel * pravy;
+	uzel * levy;
+};
+
+class binarytree
+{
+public:
+	binarytree();
+	~binarytree();
+	void insertloop(int cislo);
+	void insert2(int cislo);
+	bool search(int cislo);
+	void print();
+	void inorder(uzel *p);
+	void postorder(uzel *p);
+private:
+	void insert(uzel *&k,int x);
+	int search(uzel *k,int x);
+	uzel * root;
+};
+
+binarytree::binarytree()
+{
+	root =NULL;
+}
+binarytree::~binarytree()
+{
+	postorder(root);
+}
+void binarytree::insertloop(int cislo)
+{
+
+	uzel * novy=new uzel;
+	novy->cislo=cislo;
+	novy->levy=NULL;	
+	novy->pravy=NULL;			
+	uzel*tmp;
+	tmp=root;
+
+	if(root==NULL)
+	{
+		root=novy;
+	}
+	else
+	{
+		while(1)
+		{
+			if(cislo < tmp->cislo)
+			{
+				if(tmp->levy==NULL)
+					break;
+					tmp=tmp->levy;
+				
+			}
+			else
+			{
+				if(tmp->pravy==NULL)
+					break;
+					tmp=tmp->pravy;
+				
+			}
+		}
+		if(cislo < tmp->cislo)
+		{
+			tmp->levy=novy;
+			return;
+		}
+		else
+		{
+			tmp->pravy=novy;
+			return;
+		}
+	}
+
+	
+	
+}
+void binarytree::print()
+{
+	inorder(root);
+}
+int binarytree::search(uzel *k,int x)
+{
+	if(k==NULL)
+		return -1;
+
+	if(k->cislo ==x)
+	{
+		return 1;
+	}
+
+	if(x < k->cislo)
+	{
+		return search(k->levy,x);
+	}
+	else
+	{
+		return search(k->pravy,x);
+	}
+	
+}
+void binarytree::insert(uzel *&k, int x)
+{
+	if(k==NULL)
+	{
+		k=new uzel;
+		k->cislo=x;
+		k->levy=NULL;
+		k->pravy=NULL;
+		return;
+	}
+	if(x < k->cislo)
+	{
+		insert(k->levy,x);
+		return;
+	}
+	if(x > k->cislo)
+	{
+		insert(k->pravy,x);
+		return;
+	}
+}
+void binarytree::insert2(int cislo)
+{
+	insert(root,cislo);
+}
+bool binarytree::search(int cislo)
+{
+	int vys=search(root,cislo);
+	return vys==1 ? true:false;
+}
+void binarytree::inorder(uzel *p)
+{
+	if(p!=NULL)
+	{
+		inorder(p->levy);
+		cout<<p->cislo<<endl;
+		inorder(p->pravy);
+	}
+
+}
+void binarytree::postorder(uzel *p)
+{
+	if(p!=NULL)
+	{
+		
+		postorder(p->levy);
+		postorder(p->pravy);
+		delete p;
+	}
+	
+}
+int main()
+{
+	
+	binarytree stromek;
+	stromek.insert2(10);
+	stromek.insert2(5);
+	//stromek.insert2(8);
+	//stromek.insert2(9);
+	stromek.insert2(12);
+	//stromek.insert2(11);
+	//stromek.insert2(15);
+	stromek.print();
+
+	
+	return 0;
+}
