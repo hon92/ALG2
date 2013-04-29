@@ -1,0 +1,154 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <string>
+using namespace std;
+
+struct Node
+{
+  string value;
+	Node * levy;
+	Node * pravy;
+};
+
+class Tree
+{
+public:
+	Tree()
+	{
+		root=NULL;
+	}
+	Tree(Node & root)
+	{
+		this->root=&root;
+	}
+	Tree(string vrchol)
+	{
+		root=new Node();
+		root->value=vrchol;
+		root->levy=NULL;
+		root->pravy=NULL;
+	}
+	~Tree(){}
+	vector<Node*>BreathFirst()
+	{
+		vector<Node*>result;
+		queue<Node*>tempfronta;
+
+		if(root!=NULL)
+		{
+			tempfronta.push(root);
+		}
+
+		while(!tempfronta.empty())
+		{
+			Node* current=tempfronta.front();
+			tempfronta.pop();
+
+			result.push_back(current);
+
+			if(current->levy!=NULL)
+			{
+				tempfronta.push(current->levy);
+			}
+			if(current->pravy!=NULL)
+			{
+				tempfronta.push(current->pravy);
+			}
+		}
+		return result;
+	}
+	static string DoString(vector<Node*> & nodes, string separator=";")
+	{
+		string result;
+		for(int i=0;i<nodes.size();i++)
+		{
+			result.append(nodes[i]->value);
+			result.append(separator);
+		}
+		return result.size() >0 ? result.substr(0,result.size()-separator.size()):result;
+
+	}
+	
+	void Add(Node & node)
+	{
+		if(root==NULL)
+		{
+			root=&node;
+			return;
+		}
+		vector<Node*>nodes=BreathFirst();
+
+		for(int i=0;i < nodes.size();i++)
+		{
+			if(nodes[i]->levy==NULL)
+			{
+				nodes[i]->levy=&node;
+				return;
+			}
+			else if(nodes[i]->pravy==NULL)
+			{
+				nodes[i]->pravy=&node;
+				return;
+			}
+
+
+		}
+	}
+	void ADDNode(string nodeValue)
+	{
+		Node * node=new Node();
+		node->value=nodeValue;
+		node->levy=node->pravy=NULL;
+		Add(*node);
+	}
+private:
+	Node * root;
+
+};
+
+
+
+int main()
+{
+	/*
+	Node *root=new Node();
+	root->value="a1";
+	root->levy=new Node();
+	root->levy->value="b1";
+	root->pravy=new Node();
+	root->pravy->value="c1";
+	root->pravy->levy=NULL;
+	root->pravy->pravy=NULL;
+
+	Node * b2=root->levy;
+	b2->levy=new Node();
+	b2->levy->value="d3";
+	b2->levy->pravy=NULL;
+	b2->levy->levy=NULL;
+
+	
+	b2->pravy=new Node();
+	b2->pravy->value="e3";
+	b2->pravy->levy=NULL;
+	b2->pravy->pravy=NULL;
+
+
+	Node * e3=b2->pravy;
+	e3->levy=new Node();
+	e3->levy->value="f4";
+	e3->levy->levy=NULL;
+	e3->levy->pravy=NULL;
+
+	Tree   strom(*root);
+	cout<<Tree.DoString(strom.BreathFirst())<<endl;
+
+	*/
+
+	Tree strom("a1");
+	strom.ADDNode("b2");
+	strom.ADDNode("c2");
+	strom.ADDNode("d2");
+	cout<<strom.DoString(strom.BreathFirst())<<endl;
+	return 0;
+}
